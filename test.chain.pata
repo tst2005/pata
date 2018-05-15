@@ -1,0 +1,20 @@
+#! ./pata.sh
+
+IN mods/tests/chain
+
+TEST() { load test; DefaultOrChain "$@"; }
+
+TEST # default
+echo ---------
+
+TEST foo bar baz
+echo ---------
+
+EnableImplicitEnd
+
+TEST foo bar baz 
+echo ---------
+
+TEST
+echo ---------
+
