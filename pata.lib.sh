@@ -1,4 +1,5 @@
-
+#TODO: rename: DefaultOrChain      to ChainOrDefault
+#TODO: rename: DefaultInputOrChain to ChainOrDefaultInput
 pata_builtin() {
 		local self=pata_builtin
 		case "$1" in
@@ -20,17 +21,33 @@ pata_builtin() {
 			(load) shift; . ./${NAMESPACE:+$NAMESPACE/}$1.cmd.sh;;
 			(Chain)
 				shift
+				while [ $# -gt 0 ]; do
+					case "$1" in
+						('#'*) shift;;
+						(*) break ;;
+					esac
+				done
 				if [ $# -gt 1 ]; then
 					local a1="$1";shift
 					$self Chain "$a1" | $self Chain "$@";
 					return $?
 				fi
-				if [ "$1" != : ]; then
-					"$1";
+				if [ $# -gt 0 ]; then
+					if [ "$1" != : ]; then
+						"$1";
+					fi
+				elif [ ! -t 0 ]; then
+					cat
 				fi
 			;;
 			(DefaultOrChain)
 				shift
+				while [ $# -gt 0 ]; do
+					case "$1" in
+						('#'*) shift;;
+						(*) break ;;
+					esac
+				done
 #				if [ $# -eq 0 ]; then
 #					$self Chain default
 #					return $?

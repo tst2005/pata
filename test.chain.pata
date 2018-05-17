@@ -1,5 +1,46 @@
 #! ./pata.sh
 
+
+# feature: function name prefixed by '#' are not executed
+(
+	grep1() {
+		echo >&2 'grep1 called'
+		grep o
+	}
+	grep2() {
+		echo >&2 'grep2 called'
+		grep f
+	}
+
+	echo '# w/o pata #'
+	echo '============'
+	echo foo | grep1 | grep2 | grep --color=auto 'o'
+	echo
+	echo '# w/ pata #'
+	echo '==========='
+	echo
+	echo '# grep1 and grep2'
+	echo foo | pata builtin Chain grep1 grep2 | grep --color=auto 'o'
+	echo
+	echo '# grep2 only'
+	echo foo | pata builtin Chain '#'grep1 grep2 | grep --color=auto 'o'
+	echo
+	echo '# grep1 only'
+	echo foo | pata builtin Chain grep1 '#'grep2 | grep --color=auto 'o'
+	echo
+	echo '# no grep1 nor grep2'
+	echo foo | pata builtin Chain '#'grep1 '#'grep2 | grep --color=auto 'o'
+	echo
+	echo '# with default'
+	default() {
+		echo >&2 'default called'
+		cat
+	}
+	echo foo | pata builtin DefaultOrChain '#'grep1 '#'grep2 | grep --color=auto 'o'
+)
+
+
+
 IN mods/tests/chain
 
 TEST() { load test; DefaultOrChain "$@"; }
