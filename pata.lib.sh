@@ -1,24 +1,39 @@
-#TODO: rename: DefaultOrChain      to ChainOrDefault
-#TODO: rename: DefaultInputOrChain to ChainOrDefaultInput
 pata_builtin() {
-		local self=pata_builtin
+		local self='pata builtin'
 		case "$1" in
 			(CmdExists)
 				shift; command >/dev/null 2>&1 -v "$1"
 			;;
-			(IN)
+			(In)
 				shift
 				local new="$1"
 				case "$1" in
 				(':'*) new="$NAMESPACE/${1#:}";;
 				esac
-				if [ ! -e "$new" ]; then
-					echo >&2 "No such namespace $new"
+				if [ -n "$new" ] && [ ! -e "$new" ]; then
+					echo >&2 "$self: No such namespace $new"
 					return 1
 				fi
 				NAMESPACE="$new";
 			;;
-			(load) shift; . ./${NAMESPACE:+$NAMESPACE/}$1.cmd.sh;;
+			(Load) shift; . ./${NAMESPACE:+$NAMESPACE/}$1.cmd.sh;;
+			(Cmd)
+				shift;
+				local hand="${PATA_COMMAND_HANDLER:-Aliaser}"
+				local cmd ret
+				if ! command >/dev/null 2>&1 -v "$PATA_COMMAND_HANDLER"; then
+					cmd="$1";shift
+				else
+					if ! cmd="$("$hand" "$1")"; then
+						echo >&2 "ERROR: PATA_COMMAND_HANDLER=$hand fail"
+						return 1
+					fi
+					case "$cmd" in
+						('') cmd="$1";shift
+					esac
+				fi
+				"$cmd" "$@";
+			;;
 			(Chain)
 				shift
 				while [ $# -gt 0 ]; do
@@ -34,13 +49,14 @@ pata_builtin() {
 				fi
 				if [ $# -gt 0 ]; then
 					if [ "$1" != : ]; then
-						"$1";
+						$self Cmd "$1";
+						#"$1";
 					fi
 				elif [ ! -t 0 ]; then
 					cat
 				fi
 			;;
-			(DefaultOrChain)
+			(ChainOrDefault)
 				shift
 				while [ $# -gt 0 ]; do
 					case "$1" in
@@ -50,11 +66,12 @@ pata_builtin() {
 				done
 #				if [ $# -eq 0 ]; then
 #					$self Chain default
-#					return $?
+#				else
+#					$self Chain "$@"
 #				fi
 				$self Chain "${@:-default}"
 			;;
-			(DefaultInputOrChain)
+			(ChainOrDefaultInput)
 				shift
 				{
 					if [ -t 0 ]; then # currently no input data
@@ -67,8 +84,10 @@ pata_builtin() {
 					else
 						cat
 					fi
-				} | $self DefaultOrChain "$@"
+				} | $self ChainOrDefault "$@"
 			;;
+			(DefaultOrChain) echo >&2 "FIXME: rename DefaultOrChain to ChainOrDefault"; return 12;;
+			(DefaultInputOrChain) echo >&2 "FIXME: rename DefaultInputOrChain to ChainOrDefaultInput"; return 13;;
 			(*)
 #				local cmd="PATABUILTIN_$1"
 #				if command >/dev/null 2>&1 -v "$cmd"; then
@@ -81,32 +100,24 @@ pata_builtin() {
 		esac
 }
 
-pata() {
-	if [ "$1" = buildin ]; then
-		echo >&2 "typo? buildin instead of builtin ?"; return 124
-	fi
-	if [ "$1" = builtin ]; then
-		shift;
-		pata_builtin "$@"
-		return $?
-	fi
-
+pata_command() {
+	local self='pata command'
 	local cmd="$1";shift;
 	case "$cmd" in
-		(CmdExists|IN|load|Chain|DefaultOrChain|DefaultInputOrChain)
+		(CmdExists|In|Load|Chain|ChainOrDefault|ChainOrDefaultInput|DefaultOrChain|DefaultInputOrChain)
 			cmd="PATABUILTIN_$cmd"
 		;;
 		(GET|FILTER|CONVERT|COLUMN|OUTPUT)
 			cmd="PATA_$cmd"
 		;;
 		(*)
-			echo >&2 "pata: unsupported command $cmd";return 12
+			echo >&2 "$self: unsupported command $cmd";return 12
 		;;
 	esac
 
 	case "$cmd" in
 	(PATA_PATA_*)
-		echo >&2 "ERROR loop detected? $cmd"
+		echo >&2 "$self: ERROR: loop detected? $cmd"
 		return 123
 	;;
 	esac
@@ -117,106 +128,19 @@ pata() {
 		case "$cmd" in
 			(PATABUILTIN_*) pata builtin "$cmd";return $?;;
 		esac
-		echo >&2 "pata: command $cmd not found"
+		echo >&2 "$self: command $cmd not found"
 		return 1
 	fi
 }
-
-
-PATA_GET() {
-	# GET <name> input
-	if [ $# -eq 2 ] && [ "$2" = "input" ]; then
-		load inputs
-		"$1"
-		return $?
-	fi
+pata() {
+	local self=pata
 	case "$1" in
-		(output)
-			load output
-			shift
-		;;
-		(input)
-			load inputs
-			shift
-		;;
-		(stdin|-)
-			if [ $# -ne 1 ]; then
-				echo >&2 "Wrong syntax: stdin does not support additionnal argument"
-				return 1
-			fi
-			cat
-			return 0
-		;;
-		(*)
-			load inputs
-			if ! command >/dev/null 2>&1 -v "$1"; then
-				echo >&2 "ERROR"
-				return 1
-			fi
+		(builtin) local a1="$1";shift;"pata_$a1" "$@";;
+		(command) local a1="$1";shift;"pata_$a1" "$@";;
+		(buildin) echo >&2 "$self: typo? buildin instead of builtin ?"; return 124 ;;
+		(-*) echo "Usage: pata builtin|command ...";return 0;;
+		(*) echo >&2 "WARNING: FIX usage from 'pata ...' to 'pata command ...' for pata $*"
+			pata command "$@"
 		;;
 	esac
-	DefaultOrChain "$@"
 }
-
-PATA_FILTER() {
-	load filters
-	DefaultInputOrChain "$@"
-}
-
-PATA_CONVERT() {
-	load convert
-	DefaultInputOrChain "$@"
-}
-
-PATA_COLUMN() {
-	load column
-	DefaultInputOrChain "$@"
-}
-
-PATA_OUTPUT() {
-	GET output "$@"
-}
-
-#PATABUILTINcreate() {
-#	local callname="$1" loadname="$2"
-#	eval 'PATABUILTIN_'"$callname"'() { load '"$loadname"'; DefaultInputOrChain "$@"; }; '"$callname"'() { PATABUILTIN_'"$callname"' "$@"; }'
-#}
-#PATABUILTINcreate COL "column"
-
-before() {
-	# there is nothing in stdin
-	if [ -t 0 ]; then
-		if [ -f /tmp/fifo ]; then
-			cat /tmp/fifo
-		else
-			echo >&2 "nothing to get"
-		fi
-	else # there is data in stdin
-		cat
-	fi
-}
-after() {
-	# there is no command to receive stdout, write it into fifo
-	if [ -t 1 ]; then
-		cat > /tmp/fifo.tmp
-		mv /tmp/fifo.tmp /tmp/fifo
-	else # there is something piped over stdout, just pass the data to the next piped command 
-		cat
-	fi
-}
-middle() {
-	before | after
-}
-
-CmdExists() { pata_builtin CmdExists "$@"; }
-load() { pata_builtin load "$@"; }
-IN() { pata_builtin IN "$@"; }
-Chain() { pata_builtin Chain "$@"; }
-DefaultOrChain() { pata_builtin DefaultOrChain "$@"; }
-DefaultInputOrChain() { pata builtin DefaultInputOrChain "$@"; }
-GET() { pata GET "$@"; }
-FILTER() { pata FILTER "$@"; }
-CONVERT() { pata CONVERT "$@"; }
-COLUMN() { pata COLUMN "$@"; }
-OUTPUT() { pata OUTPUT "$@"; }
-
