@@ -17,8 +17,12 @@ if [ ! -f "$STARTPWD/$1" ]; then
 	exit 1
 fi
 
-pata builtin Load pata/default
-In 'mods'
+#pata builtin In pata
+#pata builtin Load default
 
+#pata builtin In ''
+pata builtin Load pata/default
+
+In 'mods'
 . "$STARTPWD/$1"
 

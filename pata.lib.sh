@@ -14,11 +14,15 @@ pata_builtin() {
 					echo >&2 "$self: No such namespace $new"
 					return 1
 				fi
-				NAMESPACE="$new";
+				NAMESPACE="$new"
 			;;
-			(Load) shift; . ./${NAMESPACE:+$NAMESPACE/}$1.cmd.sh;;
+			(Load)
+				shift
+				local DIR="$(dirname "$1")" NAME="$(basename "$1")" NAMESPACE="$NAMESPACE"
+				. "./${NAMESPACE:+$NAMESPACE/}/$1.cmd.sh"
+			;;
 			(Cmd)
-				shift;
+				shift
 				local hand="${PATA_COMMAND_HANDLER:-Aliaser}"
 				local cmd ret
 				if ! command >/dev/null 2>&1 -v "$PATA_COMMAND_HANDLER"; then
@@ -32,7 +36,7 @@ pata_builtin() {
 						('') cmd="$1";shift
 					esac
 				fi
-				"$cmd" "$@";
+				"$cmd" "$@"
 			;;
 			(Chain)
 				shift
@@ -44,13 +48,12 @@ pata_builtin() {
 				done
 				if [ $# -gt 1 ]; then
 					local a1="$1";shift
-					$self Chain "$a1" | $self Chain "$@";
+					$self Chain "$a1" | $self Chain "$@"
 					return $?
 				fi
 				if [ $# -gt 0 ]; then
 					if [ "$1" != : ]; then
-						$self Cmd "$1";
-						#"$1";
+						$self Cmd "$1"
 					fi
 				elif [ ! -t 0 ]; then
 					cat
@@ -102,7 +105,7 @@ pata_builtin() {
 
 pata_command() {
 	local self='pata command'
-	local cmd="$1";shift;
+	local cmd="$1";shift
 	case "$cmd" in
 		(CmdExists|In|Load|Chain|ChainOrDefault|ChainOrDefaultInput|DefaultOrChain|DefaultInputOrChain)
 			cmd="PATABUILTIN_$cmd"
