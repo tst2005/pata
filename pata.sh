@@ -8,11 +8,21 @@ cd -- "$STARTPWD"
 PATA_DIR="$BASEDIR"
 . "$PATA_DIR/pata.lib.sh"
 
-if [ -z "$1" ]; then
-	echo >&2 "Usage: $0 file"
-	exit 1
+
+
+if [ $# -eq 0 ]; then
+	if [ -t 0 ]; then
+		echo >&2 "Usage: $0 file"
+		exit 1
+	fi
+	set -- /dev/stdin
 fi
-if [ ! -f "$STARTPWD/$1" ]; then
+
+case "$1" in
+	(/*) ;;
+	(*) f="$STARTPWD/$1"; shift; set -- "$f" "$@" ;;
+esac
+if [ ! -r "$1" ]; then
 	echo >&2 "No such $1"
 	exit 1
 fi
@@ -20,9 +30,10 @@ fi
 #pata builtin In pata
 #pata builtin Load default
 
-#pata builtin In ''
+pata builtin In ''
 pata builtin Load pata/default
 
-In 'mods'
-. "$STARTPWD/$1"
+pata builtin In 'mods'
+
+. "$1"
 
