@@ -1,11 +1,44 @@
 #! ./pata.sh
 
-IN base
-load std
+(
+inputsample() {
+	echo 1
+	echo 2
+	echo 3
+	echo 4
+}
+IN base; Load std;
+inputsample | avgsum;
+)
 
-{
-echo 1
-echo 2
-echo 3
-echo 4
-} | avgsum
+(
+inputsample() {
+	echo 1
+	echo 2
+	echo 3
+	echo 4
+}
+inputsample | { IN base; Load std; avgsum; }
+)
+
+(
+inputsample() {
+	echo 1
+	echo 2
+	echo 3
+	echo 4
+}
+avgsum2() { IN base; Load std; avgsum; }
+inputsample | avgsum2;
+)
+
+(
+inputsample() {
+	echo 1
+	echo 2
+	echo 3
+	echo 4
+}
+avgsum() { IN base; Load std; avgsum; }
+inputsample | avgsum;
+)

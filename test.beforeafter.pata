@@ -1,0 +1,16 @@
+#! ./pata.sh
+
+In ''
+Load alpha/beforeafter;
+
+if false; then
+
+echo foo | after
+before | before | after | after
+before | hexdump -C
+
+fi
+
+echo foo | middle
+middle| middle | middle | middle
+middle | hexdump -C

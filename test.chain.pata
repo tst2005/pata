@@ -36,14 +36,14 @@
 		echo >&2 'default called'
 		cat
 	}
-	echo foo | pata builtin DefaultOrChain '#'grep1 '#'grep2 | grep --color=auto 'o'
+	echo foo | pata builtin ChainOrDefault '#'grep1 '#'grep2 | grep --color=auto 'o'
 )
 
 
 
 IN mods/tests/chain
 
-TEST() { load test; DefaultOrChain "$@"; }
+TEST() { load test; ChainOrDefault "$@"; }
 
 TEST # default
 echo ---------
