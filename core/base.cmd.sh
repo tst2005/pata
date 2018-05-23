@@ -1,3 +1,6 @@
+
+PATA_MOD_PREFIX='PATA_'
+
 PATA_DEBUG() {
 	pata builtin InLoad "base/debug";
 }
@@ -57,10 +60,9 @@ PATA_OUTPUT() {
 	GET output "$@"
 }
 
+
 #PATABUILTINcreate() {
 #	local callname="$1" loadname="$2"
 #	eval 'PATABUILTIN_'"$callname"'() { load '"$loadname"'; ChainOrDefaultInput "$@"; }; '"$callname"'() { PATABUILTIN_'"$callname"' "$@"; }'
 #}
 #PATABUILTINcreate COL "column"
-
-pata builtin Load "$DIR/$NAME/short"

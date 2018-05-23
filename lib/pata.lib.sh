@@ -21,6 +21,7 @@ pata_builtin() {
 			;;
 			(Load)
 				shift
+#echo >&2 "# I am $NAMESPACE/$DIR/$NAME : I am loading $NAMESPACE/$1"
 				local DIR="$(dirname "$1")" NAME="$(basename "$1")" NAMESPACE="$NAMESPACE"
 				. "./${NAMESPACE:+$NAMESPACE/}/$1.cmd.sh"
 			;;
@@ -34,6 +35,14 @@ pata_builtin() {
 				$self In -
 				return $r
 			;;
+			(PrefixFunc)
+				shift
+				local prefix="$1";shift
+				[ -z "$prefix" ] ||
+				for name in "$@"; do
+					eval ''"$name"'() { '"$prefix""$name"' "$@"; }'
+				done
+			;;
 			(Cmd)
 				shift
 				local hand="${PATA_COMMAND_HANDLER:-Aliaser}"
@@ -45,9 +54,8 @@ pata_builtin() {
 						echo >&2 "ERROR: PATA_COMMAND_HANDLER=$hand fail"
 						return 1
 					fi
-					case "$cmd" in
-						('') cmd="$1";shift
-					esac
+					[ -n "$cmd" ] || cmd="$1"
+					shift
 				fi
 				"$cmd" "$@"
 			;;

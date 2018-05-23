@@ -1,3 +1,5 @@
+
+
 CmdExists() {		pata builtin CmdExists			"$@"; }
 Load() { 		pata builtin Load			"$@"; }
 In() {			pata builtin In				"$@"; }
@@ -6,14 +8,14 @@ Cmd() {			pata builtin Cmd			"$@"; }
 Chain() { 		pata builtin Chain			"$@"; }
 ChainOrDefault() { 	pata builtin ChainOrDefault		"$@"; }
 ChainOrDefaultInput() {	pata builtin ChainOrDefaultInput	"$@"; }
+PrefixFunc() {		pata builtin PrefixFunc			"$@"; }
 
 load() { 		pata builtin Load			"$@"; }
 IN() { 			pata builtin In				"$@"; }
 
-GET() {			pata command GET			"$@"; }
-FILTER() {		pata command FILTER			"$@"; }
-CONVERT() {		pata command CONVERT			"$@"; }
-COLUMN() {		pata command COLUMN			"$@"; }
-OUTPUT() {		pata command OUTPUT			"$@"; }
+#######################################################################
 
-DEBUG() {		pata command DEBUG			"$@"; }
+Load "$(dirname "$DIR/$NAME")"
+PrefixFunc "$PATA_MOD_PREFIX" GET FILTER CONVERT COLUMN OUTPUT DEBUG
+
+#PATA_MOD_PREFIX=''
