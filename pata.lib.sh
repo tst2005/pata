@@ -6,20 +6,33 @@ pata_builtin() {
 			;;
 			(In)
 				shift
-				local new="$1"
+				local new
 				case "$1" in
-				(':'*) new="$NAMESPACE/${1#:}";;
+				('-')	new="$OLDNAMESPACE"	;;
+				(':'*)	new="$NAMESPACE/${1#:}"	;;
+				(*)	new="$1";shift		;;
 				esac
 				if [ -n "$new" ] && [ ! -e "$new" ]; then
 					echo >&2 "$self: No such namespace $new"
 					return 1
 				fi
+				OLDNAMESPACE="$NAMESPACE"
 				NAMESPACE="$new"
 			;;
 			(Load)
 				shift
 				local DIR="$(dirname "$1")" NAME="$(basename "$1")" NAMESPACE="$NAMESPACE"
 				. "./${NAMESPACE:+$NAMESPACE/}/$1.cmd.sh"
+			;;
+			(InLoad)
+				shift
+				local OLDNAMESPACE="$NAMESPACE"
+				local r=0
+				$self In "$(dirname -- "$1")" &&
+				$self Load "$(basename -- "$1")";
+				r=$?
+				$self In -
+				return $r
 			;;
 			(Cmd)
 				shift
@@ -92,13 +105,8 @@ pata_builtin() {
 			(DefaultOrChain) echo >&2 "FIXME: rename DefaultOrChain to ChainOrDefault"; return 12;;
 			(DefaultInputOrChain) echo >&2 "FIXME: rename DefaultInputOrChain to ChainOrDefaultInput"; return 13;;
 			(*)
-#				local cmd="PATABUILTIN_$1"
-#				if command >/dev/null 2>&1 -v "$cmd"; then
-					echo >&2 "pata: builtin $1 not found"
-					return 1
-#				fi
-#				shift
-#				"$cmd" "$@"
+				echo >&2 "pata: builtin $1 not found"
+				return 1
 			;;
 		esac
 }
@@ -107,10 +115,10 @@ pata_command() {
 	local self='pata command'
 	local cmd="$1";shift
 	case "$cmd" in
-		(CmdExists|In|Load|Chain|ChainOrDefault|ChainOrDefaultInput|DefaultOrChain|DefaultInputOrChain)
+		(CmdExists|In|Load|Chain|ChainOrDefault|ChainOrDefaultInput|DefaultOrChain|DefaultInputOrChain|[A-Z][a-z]*)
 			cmd="PATABUILTIN_$cmd"
 		;;
-		(GET|FILTER|CONVERT|COLUMN|OUTPUT)
+		(GET|FILTER|CONVERT|COLUMN|OUTPUT|[A-Z][A-Z]*)
 			cmd="PATA_$cmd"
 		;;
 		(*)

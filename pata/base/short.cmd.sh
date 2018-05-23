@@ -1,6 +1,7 @@
 CmdExists() {		pata builtin CmdExists			"$@"; }
 Load() { 		pata builtin Load			"$@"; }
 In() {			pata builtin In				"$@"; }
+InLoad() {		pata builtin InLoad			"$@"; }
 Cmd() {			pata builtin Cmd			"$@"; }
 Chain() { 		pata builtin Chain			"$@"; }
 ChainOrDefault() { 	pata builtin ChainOrDefault		"$@"; }
