@@ -1,4 +1,4 @@
-#! ./pata.sh
+#! ./bin/pata.sh
 
 In ''
 Load alpha/beforeafter;

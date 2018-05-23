@@ -1,7 +1,7 @@
 #!/bin/sh
 
 STARTPWD="$(pwd)"
-cd -- "$(dirname -- "$0")" || exit 1
+cd -- "$(dirname -- "$0")/.." || exit 1
 BASEDIR="$(pwd)"
 cd -- "$STARTPWD"
 
