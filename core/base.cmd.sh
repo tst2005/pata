@@ -5,22 +5,33 @@ PATA_DEBUG() {
 	pata builtin InLoad "base/debug";
 }
 
+PATA_INPUT() {
+	load input
+	ChainOrDefaultInput "$@"
+}
+
+PATA_OUTPUT() {
+	load output
+	ChainOrDefault "$@"
+}
 
 PATA_GET() {
 	# GET <name> input
 	if [ $# -eq 2 ] && [ "$2" = "input" ]; then
-		load inputs
+		load input
 		"$1"
 		return $?
 	fi
 	case "$1" in
 		(output)
-			load output
 			shift
+			PATA_OUTPUT "$@"
+			return $?
 		;;
 		(input)
-			load inputs
 			shift
+			PATA_INPUT "$@"
+			return $?
 		;;
 		(stdin|-)
 			if [ $# -ne 1 ]; then
@@ -31,18 +42,18 @@ PATA_GET() {
 			return 0
 		;;
 		(*)
-			load inputs
+			load input
 			if ! command >/dev/null 2>&1 -v "$1"; then
 				echo >&2 "ERROR"
 				return 1
 			fi
+			ChainOrDefault "$@"
 		;;
 	esac
-	ChainOrDefault "$@"
 }
 
 PATA_FILTER() {
-	load filters
+	load filter
 	ChainOrDefaultInput "$@"
 }
 
@@ -54,10 +65,6 @@ PATA_CONVERT() {
 PATA_COLUMN() {
 	load column
 	ChainOrDefaultInput "$@"
-}
-
-PATA_OUTPUT() {
-	GET output "$@"
 }
 
 
