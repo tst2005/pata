@@ -29,5 +29,6 @@ pata builtin InLoad core/default
 
 pata builtin In 'mods'
 
-. "$1"
-
+# inside $a1 loading, $1 is the next argument
+argzero="$1";shift
+. "$argzero"
