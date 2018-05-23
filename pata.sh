@@ -6,7 +6,7 @@ BASEDIR="$(pwd)"
 cd -- "$STARTPWD"
 
 PATA_DIR="$BASEDIR"
-. "$PATA_DIR/pata.lib.sh"
+. "$PATA_DIR/lib/pata.lib.sh"
 
 
 
