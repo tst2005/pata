@@ -8,8 +8,6 @@ cd -- "$STARTPWD"
 PATA_DIR="$BASEDIR"
 . "$PATA_DIR/lib/pata.lib.sh"
 
-
-
 if [ $# -eq 0 ]; then
 	if [ -t 0 ]; then
 		echo >&2 "Usage: $0 file"
@@ -27,11 +25,7 @@ if [ ! -r "$1" ]; then
 	exit 1
 fi
 
-#pata builtin In pata
-#pata builtin Load default
-
-pata builtin In ''
-pata builtin Load pata/default
+pata builtin InLoad core/default
 
 pata builtin In 'mods'
 

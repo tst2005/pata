@@ -1,12 +1,5 @@
 #! ./pata.sh
 
-In pata; Load default;
-
-#DEBUG() {
-#	InLoad "base/debug";
-#}
-#type DEBUG
-
 DEBUG
 Verbose
 After 1
