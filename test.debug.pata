@@ -1,0 +1,24 @@
+#! ./pata.sh
+
+In pata; Load default;
+
+#DEBUG() {
+#	InLoad "base/debug";
+#}
+#type DEBUG
+
+DEBUG
+Verbose
+After 1
+Before 2
+DebugInput() { echo 'sample to test'; }
+
+Step 1 \
+	echo "toto" |
+Step 2 \
+	grep -o 'to' |
+Step 3 \
+	grep --color 't' |
+Step 4 \
+	cat
+

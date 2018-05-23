@@ -16,3 +16,4 @@ CONVERT() {		pata command CONVERT			"$@"; }
 COLUMN() {		pata command COLUMN			"$@"; }
 OUTPUT() {		pata command OUTPUT			"$@"; }
 
+DEBUG() {		pata command DEBUG			"$@"; }

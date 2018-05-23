@@ -1,3 +1,8 @@
+PATA_DEBUG() {
+	pata builtin InLoad "base/debug";
+}
+
+
 PATA_GET() {
 	# GET <name> input
 	if [ $# -eq 2 ] && [ "$2" = "input" ]; then
