@@ -3,6 +3,8 @@
 In ''
 Load alpha/beforeafter;
 
+${PATA_MOD_PREFIX}begin
+
 if false; then
 
 echo foo | after
@@ -11,6 +13,20 @@ before | hexdump -C
 
 fi
 
-echo foo | middle
-middle| middle | middle | middle
-middle | hexdump -C
+Aliaser() {
+	echo "${PATA_MOD_PREFIX}$1";
+}
+middle="$(Aliaser middle)"
+commit="$(Aliaser commit)"
+
+d() { echo no prefix; }
+session_d() { echo ok prefix; }
+
+Cmd d
+exit
+
+echo foo | $middle
+$middle| $middle | $middle | $middle
+$middle | hexdump -C
+
+$commit
