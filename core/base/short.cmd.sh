@@ -16,6 +16,12 @@ IN() { 			pata builtin In				"$@"; }
 #######################################################################
 
 Load "$(dirname "$DIR/$NAME")"
-PrefixFunc "$PATA_MOD_PREFIX" GET FILTER CONVERT COLUMN OUTPUT DEBUG
+PrefixFunc "$PATA_MOD_PREFIX" INPUT OUTPUT GET FILTER CONVERT COLUMN OUTPUT DEBUG
+
+#for f in INPUT OUTPUT GET FILTER CONVERT COLUMN OUTPUT DEBUG; do
+#	pata builtin CmdExists $f && echo >&2 "$f exists" || echo >&2 "$f MISSING"
+#done
+
+pata builtin CmdExists Step || Step() { shift; "$@"; }
 
 #PATA_MOD_PREFIX=''
