@@ -47,7 +47,7 @@ pata_builtin() {
 				shift
 				local hand="${PATA_COMMAND_HANDLER:-Aliaser}"
 				local cmd ret
-				if ! command >/dev/null 2>&1 -v "$PATA_COMMAND_HANDLER"; then
+				if ! command >/dev/null 2>&1 -v "$hand"; then
 					cmd="$1";shift
 				else
 					if ! cmd="$("$hand" "$1")"; then
