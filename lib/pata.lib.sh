@@ -45,6 +45,9 @@ pata_builtin() {
 			;;
 			(Cmd)
 				shift
+				if [ $# -ge 1 ] && [ "$1" = : ]; then
+					return 0
+				fi
 				local hand="${PATA_COMMAND_HANDLER:-Aliaser}"
 				local cmd ret
 				if ! command >/dev/null 2>&1 -v "$hand"; then
@@ -82,6 +85,9 @@ pata_builtin() {
 			;;
 			(ChainOrDefault)
 				shift
+				if [ $# -eq 1 ] && [ "$1" = : ]; then
+					return 0
+				fi
 				while [ $# -gt 0 ]; do
 					case "$1" in
 						('#'*) shift;;
@@ -95,11 +101,14 @@ pata_builtin() {
 #				fi
 				$self Chain "${@:-default}"
 			;;
-			(ChainOrDefaultInput)
+			(InputOrDefaultInput)
 				shift
+				if [ $# -eq 1 ] && [ "$1" = : ]; then
+					return 0
+				fi
 				{
 					if [ -t 0 ]; then # currently no input data
-						if $self CmdExists "default"; then
+						if $self CmdExists "defaultInput"; then
 							defaultInput
 						else
 							echo >&2 "ERROR: no data and no defaultInput available"
@@ -108,7 +117,15 @@ pata_builtin() {
 					else
 						cat
 					fi
-				} | $self ChainOrDefault "$@"
+				}
+			;;
+			(ChainOrDefaultInput)
+				shift
+				if [ $# -eq 1 ] && [ "$1" = : ]; then
+					return 0
+				fi
+				$self InputOrDefaultInput |
+				$self ChainOrDefault "$@"
 			;;
 			(DefaultOrChain) echo >&2 "FIXME: rename DefaultOrChain to ChainOrDefault"; return 12;;
 			(DefaultInputOrChain) echo >&2 "FIXME: rename DefaultInputOrChain to ChainOrDefaultInput"; return 13;;
