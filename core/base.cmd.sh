@@ -7,12 +7,12 @@ PATA_DEBUG() {
 
 PATA_INPUT() {
 	load input
-	ChainOrDefaultInput "$@"
+	ChainOrDefault "$@"
 }
 
 PATA_OUTPUT() {
 	load output
-	ChainOrDefault "$@"
+	ChainOrDefaultInput "$@"
 }
 
 PATA_GET() {
