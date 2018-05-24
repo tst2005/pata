@@ -20,6 +20,16 @@ DebugStep() {
 	;;
 	(Step) shift;
 		local step="$1";shift
+# a try to support:  if Step 33; then ... fi
+#		if [ $# -eq 0 ]; then
+#			if [ -n "${PATA_STEP_NOTAFTER:-}" ] && [ $step -gt $PATA_STEP_NOTAFTER ]; then
+#				return 1
+#			elif [ -n "${PATA_STEP_NOTBEFORE:-}" ] && [ $step -lt $PATA_STEP_NOTBEFORE ]; then
+#				return 1
+#			else
+#				return 0
+#			fi
+#		fi
 		if [ -n "${PATA_STEP_NOTAFTER:-}" ] && [ $step -gt $PATA_STEP_NOTAFTER ]; then
 			$self Pass
 		elif [ -n "${PATA_STEP_NOTBEFORE:-}" ] && [ $step -lt $PATA_STEP_NOTBEFORE ]; then
