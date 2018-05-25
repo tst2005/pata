@@ -1,0 +1,13 @@
+#! ./bin/pata.sh
+
+In mods/conv
+Load rgrepn/json
+Load json/rgrepn
+
+if [ -t 0 ]; then
+	printf '%s\n' "./dir/subpath/file:1:value" "foo/bar/buz:1:vvv"
+else
+	cat
+fi | 
+rgrepn_to_json |
+json_to_rgrepn
