@@ -1,0 +1,36 @@
+#! ./bin/pata.sh
+
+InLoad mods/jq
+
+data1() {
+	printf '[
+	{"file":"foo", "content":"line1"},
+	{"file":"bar", "content":"line1"},
+	{"file":"foo", "content":"line2"},
+	{"file":"buz", "content":"line1"}
+	]';
+}
+data2() {
+	printf '[
+        ["foo", "line1"],
+        ["bar", "line1"],
+        ["foo", "line2"],
+        ["buz", "line1"]
+	]';
+} 
+
+data1 | {
+	result="$(jq -c "$jq_function_keygroup_by"' keygroup_by("file")')"
+	[ "$result" = '{"bar":[{"content":"line1"}],"buz":[{"content":"line1"}],"foo":[{"content":"line1"},{"content":"line2"}]}' ] && echo ok || echo FAIL
+}
+data1 | {
+	result="$(JQ_OPTIONS="${JQ_OPTIONS:+$JQ_OPTIONS }-c" jqf 'keygroup_by("file")')"
+	[ "$result" = '{"bar":[{"content":"line1"}],"buz":[{"content":"line1"}],"foo":[{"content":"line1"},{"content":"line2"}]}' ] && echo ok || echo FAIL
+}
+
+data2 | {
+	result="$(JQ_OPTIONS="${JQ_OPTIONS:+$JQ_OPTIONS }-c" jqf 'keygroup_by(0)')"
+	[ "$result" = '{"bar":[["line1"]],"buz":[["line1"]],"foo":[["line1"],["line2"]]}' ] && echo ok || echo FAIL
+}
+
+
