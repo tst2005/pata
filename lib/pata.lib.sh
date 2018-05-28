@@ -35,6 +35,7 @@ pata_builtin() {
 				$self In -
 				return $r
 			;;
+			# Create a function named NAME that will call the real function PREFIX_NAME
 			(PrefixFunc)
 				shift
 				local prefix="$1";shift
@@ -43,6 +44,7 @@ pata_builtin() {
 					eval ''"$name"'() { '"$prefix""$name"' "$@"; }'
 				done
 			;;
+			# Execute a command with all name translation stuff
 			(Cmd)
 				shift
 				if [ $# -ge 1 ] && [ "$1" = : ]; then
@@ -62,6 +64,8 @@ pata_builtin() {
 				fi
 				"$cmd" "$@"
 			;;
+			# <- Chain foo bar buz
+			# -> got: foo | bar | buz
 			(Chain)
 				shift
 				while [ $# -gt 0 ]; do
@@ -80,6 +84,36 @@ pata_builtin() {
 						$self Cmd "$1"
 					fi
 				elif [ ! -t 0 ]; then
+					cat
+				fi
+			;;
+			(Chain2)
+				shift
+				while [ $# -gt 0 ]; do
+					case "$1" in
+						('#'*) shift;;
+						(*) break ;;
+					esac
+				done
+				local pipeline="${PATA_CHAIN_PIPELINE}"
+				if [ $# -gt 1 ]; then
+					local a1="$1";shift
+					if ${pipeline:-false}; then
+						local tmpbuf="$(mktemp $PATA_SESSION_BUFFER.XXXXXX)"
+						$self Chain2 "$a1" > "$tmpbuf"
+						$self Chain2 "$@" < "$tmpbuf"
+						rm -f -- "$tmpbuf"
+					else
+						$self Chain2 "$a1"
+						$self Chain2 "$@"
+					fi
+					return $?
+				fi
+				if [ $# -le 1 ]; then
+					if [ "$1" != : ]; then
+						$self Cmd "$1"
+					fi
+				elif ${pipeline:-false} && [ ! -t 0 ]; then
 					cat
 				fi
 			;;
