@@ -16,6 +16,7 @@ if [ $# -eq 0 ]; then
 	set -- /dev/stdin
 fi
 
+A0="$1"
 case "$1" in
 	(/*) ;;
 	(*) f="$STARTPWD/$1"; shift; set -- "$f" "$@" ;;
@@ -30,5 +31,5 @@ pata builtin InLoad core/default
 pata builtin In 'mods'
 
 # inside $a1 loading, $1 is the next argument
-argzero="$1";shift
+argzero="$1";shift; A0="$A0"
 . "$argzero"
