@@ -1,8 +1,8 @@
 json_to_rgrepn() {
 	jq '
 	map(
-		(if (.id|startswith("/")) then ("") else ("./") end) +
-		.id + "/" + .key + ":" + (.n|tostring) + ":" + .value
+		(if (.dir|startswith("/")) then ("") else ("./") end) +
+		.dir + "/" + .file + ":" + (.n|tostring) + ":" + .value
 	)
 	'|jq -r '.[]'
 }

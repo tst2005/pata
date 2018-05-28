@@ -4,8 +4,8 @@ In mods/conv
 Load rgrepn/json
 Load json/rgrepn
 
-if [ -t 0 ]; then
-	printf '%s\n' "./dir/subpath/file:1:value" "foo/bar/buz:1:vvv"
+if true || [ -t 0 ]; then
+	printf '%s\n' "./dir/subpath/file:1:value" "foo/bar/buz:1:vvv" "foo/bar/buz:2:line2"
 else
 	cat
 fi | 

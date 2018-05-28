@@ -34,6 +34,6 @@ rgrepn_to_json() {
 		[ ([.[0],.[1]]|join("/")), .[2:]] | flatten(1) |
 		[ .[0][0:(.[0]|rindex("/"))], .[0][(.[0]|rindex("/"))+1:], .[1:]] | flatten(1) |
 		[ .[0], .[1], (.[2]|split1(":"))] | flatten(1) |
-		{"id": .[0], "key": .[1], "n": .[2]|tonumber, "value": .[3]}
+		{"dir": .[0], "file": .[1], "n": .[2]|tonumber, "value": .[3]}
 	)'
 }
