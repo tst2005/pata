@@ -1,0 +1,51 @@
+#! ./bin/pata.sh
+
+# wanted result:
+# [
+#  [ "foo", "bar", "buz", "xx" ],
+#  [ "a1",  "b1",  "c1",  null ],
+#  [ "a2",  "b2",  "c2",  null ],
+#  [ "a3",  "b3",  "c3",  null ],
+#  [ "a4",  "b4",  "c4",  "undef" ]
+# ]
+
+InLoad mods/jq
+
+printf '[
+{
+  "foo": "a1",
+  "bar": "b1",
+  "buz": "c1"
+}, {
+  "foo": "a2",
+  "bar": "b2",
+  "buz": "c2"
+}, {
+  "foo": "a3",
+  "bar": "b3",
+  "buz": "c3"
+}, {
+  "xx" : "undef",
+  "foo": "a4",
+  "bar": "b4",
+  "buz": "c4"
+}
+]' |
+#JQ_OPTIONS='-c' \
+jqf object_to_array 
+#|
+# sed -e 's/\(\],\)/\1\n/g'
+
+
+# 1) get the keys
+#   map(keys)|flatten(1)|unique
+#   map(keys)|flatten(1)|unique|sort
+
+# 2) make a array of array with each value ...
+#   ?
+#   map( to_entries|sort_by(.key)|map(.value)|flatten(1) )
+
+# Issue:
+# - how to fill non-existant cell with null value ?
+# - how to get each value in a specific ordered keys list (original unsorted keys)
+
