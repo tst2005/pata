@@ -11,6 +11,7 @@
 
 InLoad mods/jq
 
+getsample() {
 printf '[
 {
   "foo": "a1",
@@ -30,11 +31,32 @@ printf '[
   "bar": "b4",
   "buz": "c4"
 }
-]' |
-#JQ_OPTIONS='-c' \
-jqf object_to_array 
-#|
-# sed -e 's/\(\],\)/\1\n/g'
+]';
+}
+
+
+[ '[["bar","buz","foo","xx"],["b1","c1","a1",null],["b2","c2","a2",null],["b3","c3","a3",null],["b4","c4","a4","undef"]]' \
+= "$(getsample | JQ_OPTIONS='-c' jqf object_to_array)" ] &&
+echo ok || echo FAIL
+
+[ '[["foo","xx","buz"],["a1",null,"c1"],["a2",null,"c2"],["a3",null,"c3"],["a4","undef","c4"]]' \
+= "$(getsample | JQ_OPTIONS='-c' jqf 'object_to_array(["foo","xx","buz"])')" \
+] &&
+echo ok || echo FAIL
+
+[ '"foo","xx","buz"
+"a1",,"c1"
+"a2",,"c2"
+"a3",,"c3"
+"a4","undef","c4"' \
+= "$(getsample | JQ_OPTIONS='-c' jqf 'object_to_array(["foo","xx","buz"])'|jq_array_to_csv)" ] &&
+echo ok || echo FAIL
+
+[ '[["foo","xx","yy","buz"],["a1",null,null,"c1"],["a2",null,null,"c2"],["a3",null,null,"c3"],["a4","undef",null,"c4"]]' \
+= "$(getsample | JQ_OPTIONS='-c' jqf 'object_to_array(["foo","xx","yy","buz"])')" \
+] &&
+echo ok || echo FAIL
+
 
 
 # 1) get the keys
