@@ -19,12 +19,6 @@ data2() {
 	]';
 } 
 
-#data1 | {
-#	result="$(JQ_OPTIONS="${JQ_OPTIONS:+$JQ_OPTIONS }-c" jqf 'keygroup_by("file")')"
-#	[ "$result" = '{"bar":[{"content":"line1"}],"buz":[{"content":"line1"}],"foo":[{"content":"line1"},{"content":"line2"}]}' ] && echo ok || echo FAIL
-#}
-
-
 getrawdata() {
         printf '[
                 { "id": "bar", "info": "A babab" },
@@ -38,18 +32,9 @@ rawdata_to_db() {
 	jq '{db: .}';
 }
 
-#keepresult() {
-#	jq '(.result|map({key:., value:true})|from_entries) as $want | .db |= map(select($want[.id]))|del(.result)'
-#}
-
 keepresult() {
-	jq_function_db_keepresult='def db_keepresult($resultfield;$dbfield;$idfield):
-		(.[$resultfield]|map({key:., value:true})|from_entries) as $want | .[dbfield] |= map(select($want[.[$idfield]]))|del(.[resultfield]);'
-	jq ''"$jq_function_db_keepresult"' db_keepresult("result";"db";"id")';
-}
-
-keepresult() {
-	jqf 'db_keepresult("result";"db";"id")';
+	#jqf 'db_keepresult("result";"db";"id")';
+	jqf 'db_keepresult';
 }
 
 search() {
@@ -68,46 +53,12 @@ dbquery() {
         search "$1" | keepresult
 }
 
-With() {
-	local key="$1";shift
-	local cmd="$1";shift
-	local value="$1";shift
-	case "$cmd" in
-		('grep') echo '.'"$key"'|test("'"$value"'")' ;;
-		('!grep') echo '.'"$key"'|test("'"$value"'")|not' ;;
-		('=')    echo '.'"$key"'=="'"$value"'"' ;;
-		('!=')   echo '.'"$key"'!="'"$value"'"' ;;
-		(*) echo >&2 ERROR:WTF ;;
-	esac
-}
-Without() {
-	local key="$1";shift
-	local cmd="!$1";shift
-	cmd="${cmd#!!}"
-	With "$key" "$cmd" "$@"
-}
+With() { jq_with "$@"; }
+Without() { jq_without "$@"; }
 
 #With info grep "^A"
 #With id != "zz"
 #Without info grep "^Z"
-
-#ArgsJoin() {
-#	local b="$1";shift
-#	local e="$1";shift
-#	local sep="$1";shift
-#
-#	[ $# -eq 0 ] || printf '%s' "$b"
-#	while [ $# -gt 0 ]; do
-#		if [ $# -eq 1 ]; then
-#			printf '%s' "$1" "$e"
-#		else
-#			printf '%s%s' "$1" "$sep"
-#		fi
-#		shift
-#	done
-#}
-#And() { ArgsJoin '(' ')' ') and (' "$@"; }
-#Or() { ArgsJoin '(' ')' ') or (' "$@"; }
 
 And() { jq_and "$@"; }
 Or() { jq_or "$@"; }
@@ -133,8 +84,3 @@ runtests() {
 }
 
 runtests
-
-{
-	data1
-	data2
-} | jq -s '{"db1": .[0], "db2": .[1], "other": .[2:]}'
