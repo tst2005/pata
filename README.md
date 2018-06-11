@@ -32,3 +32,57 @@ Some experimental stuff use:
 | html         | no   | no     | no  | yes* | no     | no    |
 | rgrepn       | no   | yes    | no  | no   | -      | yes   |
 | rgrep        | no   | yes    | no  | no   | yes    | -     |
+
+# Convertion implementation alternative
+
+## csv to json
+
+* [csv2json.py]()
+* (lua ?)
+
+## json to csv
+
+* jq
+* (py ? lua ?)
+
+## json to rgrepn
+
+* jq
+* (py ? lua ?)
+
+## json to rgrep
+
+Alias: json to rgrepn, rgrepn to rgrep
+
+## xml to json
+
+* [xml2json.py]()
+
+## html to json
+
+Alias: html to xml, xml to json
+
+## html to xml
+
+* tidy
+
+## html to html
+
+Rewrite "bad" html to strict html.
+
+* tidy
+
+## rgrepn to json
+
+* jq
+* (py ? lua ?)
+
+## rgrep to rgrepn
+
+* sh
+* (py ? lua ?)
+
+## rgrep to json
+
+Alias: rgrep to rgrepn, rgrepn to json
+
