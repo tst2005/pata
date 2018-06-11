@@ -1,0 +1,5 @@
+#! ./bin/pata.sh
+InLoad "mods/conv/$1/$2"
+name="$1_to_$2"
+shift 2
+"$name" "$@"
