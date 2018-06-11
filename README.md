@@ -64,7 +64,7 @@ Alias: [html to xml](#html-to-xml), [xml to json](#xml-to-json)
 
 ## html to xml
 
-* tidy
+* `tidy -asxml`
 
 ## html to html
 
