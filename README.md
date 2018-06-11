@@ -23,9 +23,11 @@ Some experimental stuff use:
 
 # Convertion matrix
 
-| x to y       | (from) csv| json a | json o | xml |
-|--------------|-----------|--------|--------|-----|
-| (to) csv     | -         | ?      | ?      | ?   |
-| json (array) | ?         | -      | ?      | ?   |
-| json (object)| ?         | ?      | -      | ?   |
-| xml          | ?         | ?      | ?      | -   |
+| x to y       | (from) csv | json   | xml | html | rgrepn | rgrep |
+|--------------|------------|--------|-----|------|--------|-------|
+| (to) csv     | -          | yes    | no  | no   | no     | no    |
+| json         | yes        | -      | yes | yes  | yes    | yes   |
+| xml          | no         | ?      | -   | yes  | no     | no    |
+| html         | no         | no     | no  | yes* | no     | no    |
+| rgrepn       | no         | yes    | no  | no   | -      | yes   |
+| rgrep        | no         | yes    | no  | no   | yes    | -     |
