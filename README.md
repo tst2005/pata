@@ -21,3 +21,11 @@ Some experimental stuff use:
 * curl,wget (for download and REST API)
 * ping (for network stuff)
 
+# Convertion matrix
+
+| x to y       | (from) csv| json a | json o | xml |
+|==============|===========|========|========|=====|
+| (to) csv     | -         | ?      | ?      | ?   |
+| json (array) | ?         | -      | ?      | ?   |
+| json (object)| ?         | ?      | -      | ?   |
+| xml          | ?         | ?      | ?      | -   |
