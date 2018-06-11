@@ -52,7 +52,7 @@ Some experimental stuff use:
 
 ## json to rgrep
 
-Alias: json to rgrepn, rgrepn to rgrep
+Alias: [json to rgrepn](#json-to-rgrepn), [rgrepn to rgrep](#rgrepn-to-rgrep)
 
 ## xml to json
 
@@ -60,7 +60,7 @@ Alias: json to rgrepn, rgrepn to rgrep
 
 ## html to json
 
-Alias: html to xml, xml to json
+Alias: [html to xml](#html-to-xml), [xml to json](#xml-to-json)
 
 ## html to xml
 
@@ -70,7 +70,7 @@ Alias: html to xml, xml to json
 
 Rewrite "bad" html to strict html.
 
-* tidy
+* `tidy -ashtml`
 
 ## rgrepn to json
 
@@ -84,5 +84,5 @@ Rewrite "bad" html to strict html.
 
 ## rgrep to json
 
-Alias: rgrep to rgrepn, rgrepn to json
+Alias: [rgrep to rgrepn](#rgrep-to-rgrepn), [rgrepn to json](#rgrepn-to-json)
 
