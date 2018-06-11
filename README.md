@@ -24,7 +24,7 @@ Some experimental stuff use:
 # Convertion matrix
 
 | x to y       | (from) csv| json a | json o | xml |
-|==============|===========|========|========|=====|
+|--------------|-----------|--------|--------|-----|
 | (to) csv     | -         | ?      | ?      | ?   |
 | json (array) | ?         | -      | ?      | ?   |
 | json (object)| ?         | ?      | -      | ?   |
