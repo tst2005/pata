@@ -1,0 +1,26 @@
+#! ./bin/pata.sh
+
+InLoad mods/jq
+
+sample1() {
+	echo '{"foo": "FOO", "bar": "BAR"}'
+}
+sample2() {
+	echo '[
+		{"foo": "FOO", "bar": "BAR"},
+		{"foo": "FOO2", "bar": "BAR2"}
+	]';
+}
+
+runtests() {
+	[ "$(
+		sample1 | JQ_OPTIONS='-c' jqf 'keyrename("foo";"buz")'
+	)" = '{"buz":"FOO","bar":"BAR"}' ] &&
+	echo ok || echo FAIL
+	[ "$(
+		sample2 | JQ_OPTIONS='-c' jqf 'keyrename' 'map(keyrename("foo";"buz"))'
+	)" = '[{"buz":"FOO","bar":"BAR"},{"buz":"FOO2","bar":"BAR2"}]' ] &&
+	echo ok || echo FAIL
+}
+
+runtests
