@@ -13,7 +13,8 @@ But also with some thirdparty utils:
 
 * jq (for all json stuff)
 * tidy (for html to xml)
-* xml2json (for xml to json)
+* xml2json.py (for xml to json)
+* csv2json.py (for csv to json)
 
 Some experimental stuff use:
 
