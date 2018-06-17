@@ -230,10 +230,6 @@ pata_command() {
 		return 1
 	fi
 }
-pata_buildin() {
-	echo >&2 "$self: typo? uildin instead of builtin ?"
-	return 124
-}
 
 pata() {
 	local self=pata
@@ -241,7 +237,8 @@ pata() {
 		(builtin) local a1="$1";shift;"pata_$a1" "$@";;
 		(command) local a1="$1";shift;"pata_$a1" "$@";;
 		(-*) echo "Usage: pata builtin|command ...";return 0;;
-		(*) echo >&2 "WARNING: FIX usage from 'pata ...' to 'pata command ...' for pata $*"
+		(*)
+			echo >&2 "WARNING: FIX usage from 'pata' to 'pata command' for 'pata $*'"
 			pata command "$@"
 		;;
 	esac
