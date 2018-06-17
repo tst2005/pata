@@ -4,7 +4,7 @@ Pata is an utility to helps for automation and data processing tasks.
 
 # Made with
 
-Mainly with 
+Mainly with
 
 * POSIX shell (bash when POSIX is too poor)
 * grep,sed,find,cut,...

@@ -7,12 +7,12 @@
 
 
 #- split / join
- 
+
 #- substring
 
 #printf '["foobarbuz", 0, 4]' | jq '.[0][.[1]:.[2]]'
 
-#- index(s), rindex(s) 
+#- index(s), rindex(s)
 
 #- startswith(str)
 

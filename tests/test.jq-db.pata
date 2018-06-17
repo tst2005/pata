@@ -17,7 +17,7 @@ data2() {
         ["foo", "line2"],
         ["buz", "line1"]
 	]';
-} 
+}
 
 getrawdata() {
         printf '[
@@ -70,7 +70,6 @@ sample1() {
         dbquery '.id!="zz"'
 }
 sample2() {
-	
 	getdb | dbquery "$(And \
 		"$(With    info grep "^A")" \
 		"$(Without info grep "^Z")" \

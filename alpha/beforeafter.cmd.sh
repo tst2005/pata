@@ -43,7 +43,7 @@ session_after() {
 		else
 			echo >&2 "ERROR: no buffer"
 		fi
-	else # there is something piped over stdout, just pass the data to the next piped command 
+	else # there is something piped over stdout, just pass the data to the next piped command
 		cat
 	fi
 }

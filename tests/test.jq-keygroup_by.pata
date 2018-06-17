@@ -17,7 +17,7 @@ data2() {
         ["foo", "line2"],
         ["buz", "line1"]
 	]';
-} 
+}
 
 echo "data1 | jq ... 'keygroup_by("file")'"
 data1 | {

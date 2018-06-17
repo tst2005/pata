@@ -53,7 +53,7 @@ echo ---------
 
 EnableImplicitEnd
 
-TEST foo bar baz 
+TEST foo bar baz
 echo ---------
 
 TEST
