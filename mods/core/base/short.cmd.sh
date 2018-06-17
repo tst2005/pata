@@ -9,6 +9,7 @@ Chain() { 		pata builtin Chain			"$@"; }
 ChainOrDefault() { 	pata builtin ChainOrDefault		"$@"; }
 ChainOrDefaultInput() {	pata builtin ChainOrDefaultInput	"$@"; }
 PrefixFunc() {		pata builtin PrefixFunc			"$@"; }
+Require() {		pata builtin Require			"$@"; }
 
 load() { 		pata builtin Load			"$@"; }
 IN() { 			pata builtin In				"$@"; }

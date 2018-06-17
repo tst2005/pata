@@ -22,7 +22,7 @@ pata_builtin() {
 				(':'*)	new="$NAMESPACE/${1#:}"	;;
 				(*)	new="$1";shift		;;
 				esac
-				if [ -n "$new" ] && [ ! -e "$new" ]; then
+				if [ -n "$PATA_MODSDIR/$new" ] && [ ! -e "$PATA_MODSDIR/$new" ]; then
 					echo >&2 "$self: No such namespace $new"
 					return 1
 				fi
@@ -33,7 +33,23 @@ pata_builtin() {
 				shift
 #echo >&2 "# I am $NAMESPACE/$DIR/$NAME : I am loading $NAMESPACE/$1"
 				local DIR="$(dirname "$1")" NAME="$(basename "$1")" NAMESPACE="$NAMESPACE"
-				. "./${NAMESPACE:+$NAMESPACE/}/$1.cmd.sh"
+				. "$PATA_MODSDIR/${NAMESPACE:+$NAMESPACE/}/$1.cmd.sh"
+			;;
+			(Require) shift
+				local f=''
+				for dir in "$PATA_MODSDIR2" "$PATA_MODSDIR"; do
+					[ -n "$basedir" ] || continue
+					if [ -r "$dir/${NAMESPACE:+$NAMESPACE/}/$1.cmd.sh" ]; then
+						f="$dir/${NAMESPACE:+$NAMESPACE/}/$1.cmd.sh"
+						break
+					fi
+				done
+				if [ -z "$f" ]; then
+					echo >&2 "$self[Require]: no such $1"
+					return 1
+				fi
+				local DIR="$(dirname "$1")" NAME="$(basename "$1")" NAMESPACE="$NAMESPACE"
+				. "$f"
 			;;
 			(InLoad)
 				shift
@@ -246,14 +262,7 @@ pata_bin() {
 	local A0="$app"
 	(
 		pata builtin InLoad core/default
-
-		pata builtin In 'mods'
-
-		# inside $a1 loading, $1 is the next argument
-		#case "$app" in
-		#	(/*) . "$app" ;;
-		#	(*)  . "./$app" ;;
-		#esac
+		pata builtin In .
 		pata builtin source "$app" "$@"
 	)
 }

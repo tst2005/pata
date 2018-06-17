@@ -31,6 +31,11 @@ else
 	echo >&2 "$0: unable to find mods directory"
 	exit 1
 fi
+if pata_search "$(pwd)" -d mods; then
+	PATA_MODSDIR2="$found"
+else
+	PATA_MODSDIR2=''
+fi
 
 case "$PATA_LIBFILE" in
 	(/*) . "$PATA_LIBFILE" ;;
