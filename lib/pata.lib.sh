@@ -6,8 +6,8 @@ pata_builtin() {
 				local f="$1";shift
 				set -- "$@"
 				case "$f" in
-				(/*) .   "$f" ;;
-				(*)  . "./$f" ;;
+				(/*|./*) .   "$f" ;;
+				(*)      . "./$f" ;;
 				esac
 				return $?
 			;;
@@ -76,18 +76,20 @@ pata_builtin() {
 				if [ $# -ge 1 ] && [ "$1" = : ]; then
 					return 0
 				fi
-				local hand="${PATA_COMMAND_HANDLER:-Aliaser}"
 				local cmd ret
-				if ! command >/dev/null 2>&1 -v "$hand"; then
-					cmd="$1";shift
-				else
-					if ! cmd="$("$hand" "$1")"; then
-						echo >&2 "ERROR: PATA_COMMAND_HANDLER=$hand fail"
-						return 1
-					fi
-					[ -n "$cmd" ] || cmd="$1"
-					shift
+
+				local hand="${PATA_COMMAND_HANDLER:-}"
+				if [ -z "$hand" ]; then
+					cmd="${PATA_MOD_PREFIX:-}$1"
+				elif ! command >/dev/null 2>&1 -v "$hand"; then
+					echo >&2 "$self[Cmd]: ERROR no such Alias handler PATA_COMMAND_HANDLER=$hand"
+					return 1
+				elif ! cmd="$("$hand" "$1")"; then
+					echo >&2 "ERROR: alias handler returns a failure (PATA_COMMAND_HANDLER=$hand)"
+					return 1
 				fi
+				[ -n "$cmd" ] || cmd="$1"
+				shift
 				"$cmd" "$@"
 			;;
 			# <- Chain foo bar buz
