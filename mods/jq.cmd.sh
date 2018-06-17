@@ -1,14 +1,15 @@
 
 #echo NAMESPACE=$NAMESPACE DIR=$DIR NAME=$NAME
 
-for f in "$NAMESPACE/$DIR/$NAME"/*.lib.sh; do
+for f in "$PATA_MODSDIR/$NAMESPACE/$DIR/$NAME"/*.lib.sh; do
 	[ -e "$f" ] || continue
 	#echo >&2 "- load $f"
-	case "$f" in
-		(/*) ;;
-		(*) f="./$f" ;;
-	esac
-	. "$f"
+	pata builtin source "$f"
+#	case "$f" in
+#		(/*) ;;
+#		(*) f="./$f" ;;
+#	esac
+#	. "$f"
 done
 
 jqf() {

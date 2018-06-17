@@ -1,7 +1,6 @@
 #! ./bin/pata.sh
 
-In ''
-Load alpha/beforeafter;
+Require ../alpha/beforeafter
 
 ${PATA_MOD_PREFIX}begin
 

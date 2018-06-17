@@ -41,7 +41,7 @@
 
 
 
-IN mods/tests/chain
+IN tests/chain
 
 TEST() { load test; ChainOrDefault "$@"; }
 

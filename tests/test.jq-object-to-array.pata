@@ -9,7 +9,7 @@
 #  [ "a4",  "b4",  "c4",  "undef" ]
 # ]
 
-InLoad mods/jq
+Require jq
 
 getsample() {
 printf '[

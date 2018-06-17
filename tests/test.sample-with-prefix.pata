@@ -1,6 +1,6 @@
 #! ./bin/pata.sh
 
-InLoad mods/sample-with-prefix/test
+Require sample-with-prefix/test
 
 Alias() { PrefixFunc "$PATA_MOD_PREFIX" "$@"; }
 

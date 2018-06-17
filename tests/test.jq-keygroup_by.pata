@@ -1,6 +1,6 @@
-#! ./bin/pata.sh
+#! /usr/bin/env pata
 
-InLoad mods/jq
+Require jq
 
 data1() {
 	printf '[

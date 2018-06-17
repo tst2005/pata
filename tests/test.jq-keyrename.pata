@@ -1,6 +1,6 @@
 #! ./bin/pata.sh
 
-InLoad mods/jq
+Require jq
 
 sample1() {
 	echo '{"foo": "FOO", "bar": "BAR"}'
