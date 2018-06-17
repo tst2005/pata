@@ -1,35 +1,41 @@
 #!/bin/sh
 
-STARTPWD="$(pwd)"
-cd -- "$(dirname -- "$0")/.." || exit 1
-BASEDIR="$(pwd)"
-cd -- "$STARTPWD"
+#STARTPWD="$(pwd)"
+#cd -- "$(dirname -- "$0")/.." || exit 1
+#BASEDIR="$(pwd)"
+#cd -- "$STARTPWD"
 
-PATA_DIR="$BASEDIR"
-. "$PATA_DIR/lib/pata.lib.sh"
+#PATA_DIR="$BASEDIR"
+#PATA_LIBFILE="$PATA_DIR/lib/pata.lib.sh"
 
-if [ $# -eq 0 ]; then
-	if [ -t 0 ]; then
-		echo >&2 "Usage: $0 file"
-		exit 1
-	fi
-	set -- /dev/stdin
+pata_search() {
+	for found in "$PATA_DIR/$3" "$1/$3" "$1/../$3"; do
+		if [ $2 "$found" ]; then
+			return 0
+		fi
+	done
+	return 1
+}
+basedir="$(readlink 2>&- -f "$0")"
+basedir="$(dirname -- "${basedir:-$0}")"
+
+if pata_search "$basedir" -r lib/pata.lib.sh; then
+	PATA_LIBFILE="$found"
+else
+	echo >&2 "$0: unable to find lib/$2"
+	exit 1
 fi
-
-A0="$1"
-case "$1" in
-	(/*) ;;
-	(*) f="$STARTPWD/$1"; shift; set -- "$f" "$@" ;;
-esac
-if [ ! -r "$1" ]; then
-	echo >&2 "No such $1"
+if pata_search "$basedir" -d mods; then
+	PATA_MODSDIR="$found"
+else
+	echo >&2 "$0: unable to find mods directory"
 	exit 1
 fi
 
-pata builtin InLoad core/default
+case "$PATA_LIBFILE" in
+	(/*) . "$PATA_LIBFILE" ;;
+	(*)  . "./$PATA_LIBFILE" ;;
+esac
+PATA_ARG0="$0"
 
-pata builtin In 'mods'
-
-# inside $a1 loading, $1 is the next argument
-argzero="$1";shift; A0="$A0"
-. "$argzero"
+pata_bin "$@"

@@ -1,6 +1,16 @@
 pata_builtin() {
 		local self='pata builtin'
 		case "$1" in
+			(source)
+				shift
+				local f="$1";shift
+				set -- "$@"
+				case "$f" in
+				(/*) .   "$f" ;;
+				(*)  . "./$f" ;;
+				esac
+				return $?
+			;;
 			(CmdExists)
 				shift; command >/dev/null 2>&1 -v "$1"
 			;;
@@ -202,15 +212,48 @@ pata_command() {
 		return 1
 	fi
 }
+pata_buildin() {
+	echo >&2 "$self: typo? uildin instead of builtin ?"
+	return 124
+}
+
 pata() {
 	local self=pata
 	case "$1" in
 		(builtin) local a1="$1";shift;"pata_$a1" "$@";;
 		(command) local a1="$1";shift;"pata_$a1" "$@";;
-		(buildin) echo >&2 "$self: typo? buildin instead of builtin ?"; return 124 ;;
 		(-*) echo "Usage: pata builtin|command ...";return 0;;
 		(*) echo >&2 "WARNING: FIX usage from 'pata ...' to 'pata command ...' for pata $*"
 			pata command "$@"
 		;;
 	esac
+}
+
+pata_bin() {
+	if [ $# -eq 0 ]; then
+		if [ -t 0 ]; then
+			echo >&2 "Usage: ${PATA_ARG0:-pata} file"
+			return 1
+		fi
+		set -- /dev/stdin
+	fi
+
+	local app="$1";shift
+	if [ ! -r "$app" ]; then
+		echo >&2 "No such $app"
+		return 1
+	fi
+	local A0="$app"
+	(
+		pata builtin InLoad core/default
+
+		pata builtin In 'mods'
+
+		# inside $a1 loading, $1 is the next argument
+		#case "$app" in
+		#	(/*) . "$app" ;;
+		#	(*)  . "./$app" ;;
+		#esac
+		pata builtin source "$app" "$@"
+	)
 }
