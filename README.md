@@ -22,17 +22,38 @@ Some experimental stuff use:
 * curl,wget (for download and REST API)
 * ping (for network stuff)
 
+# Convertion list
+
+* csv/json_array
+* csv/json_object
+* json_array/csv
+* json_object/csv
+* json_object/json_array
+* json_object/rgrep
+* json_object/rgrepn
+* xml/json
+* html/json
+* html/xml
+* rgrepn/json_object
+* rgrepn/rgrep
+* rgrep/json_object
+* rgrep/rgrepn
+
 # Convertion matrix
 
-| col to raw   | csv  | jsonA  | jsonO | xml | html | rgrepn | rgrep |
-|--------------|------|--------|-------|-----|------|--------|-------|
-| csv          | -    | TODO   | yes   | no  | no   | no     | no    |
-| jsonA        | TODO | -      | TODO  | yes | yes  | yes    | yes   |
-| jsonO        | yes  | yes    | -     | yes | yes  | yes    | yes   |
-| xml          | no   | no     | no    | -   | yes  | no     | no    |
-| html         | no   | no     | no    | no  | yes* | no     | no    |
-| rgrepn       | no   | no     | yes   | no  | no   | -      | yes   |
-| rgrep        | no   | no     | yes   | no  | no   | yes    | -     |
+| col to raw   | csv  | json_a  | json_o | xml  | html | rgrepn | rgrep |
+|--------------|------|---------|--------|------|------|--------|-------|
+| csv          | -    | yes     | yes    | no   | no   | no     | no    |
+| json_array   | yes* | -       | yes    | -    | -    | no     | no    |
+| json_object  | yes  | TODO    | -      | -    | -    | yes    | yes   |
+| json(struct) | -    | -       | -      | yes  | yes  | -      | -     |
+| xml          | no   | no      | no     | -    | yes  | no     | no    |
+| html         | no   | no      | no     | no   |TODO**| no     | no    |
+| rgrepn       | no   | no      | yes    | no   | no   | -      | yes   |
+| rgrep        | no   | no      | yes    | no   | no   | yes    | -     |
+
+(*: via convertion)
+(**: via tidy )
 
 jsonA means json array like :
 ```json
