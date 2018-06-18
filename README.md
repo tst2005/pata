@@ -24,14 +24,32 @@ Some experimental stuff use:
 
 # Convertion matrix
 
-| col to raw   | csv  | json   | xml | html | rgrepn | rgrep |
-|--------------|------|--------|-----|------|--------|-------|
-| csv          | -    | yes    | no  | no   | no     | no    |
-| json         | yes  | -      | yes | yes  | yes    | yes   |
-| xml          | no   | ?      | -   | yes  | no     | no    |
-| html         | no   | no     | no  | yes* | no     | no    |
-| rgrepn       | no   | yes    | no  | no   | -      | yes   |
-| rgrep        | no   | yes    | no  | no   | yes    | -     |
+| col to raw   | csv  | jsonA  | jsonO | xml | html | rgrepn | rgrep |
+|--------------|------|--------|-------|-----|------|--------|-------|
+| csv          | -    | TODO   | yes   | no  | no   | no     | no    |
+| jsonA        | TODO | -      | TODO  | yes | yes  | yes    | yes   |
+| jsonO        | yes  | yes    | -     | yes | yes  | yes    | yes   |
+| xml          | no   | no     | no    | -   | yes  | no     | no    |
+| html         | no   | no     | no    | no  | yes* | no     | no    |
+| rgrepn       | no   | no     | yes   | no  | no   | -      | yes   |
+| rgrep        | no   | no     | yes   | no  | no   | yes    | -     |
+
+jsonA means json array like :
+```json
+[
+	["head1", "head2", "head3"],
+	["x=1 y=1", "x=2 y=1", "x=3 y=1",
+	["x=1 y=2", "x=2 y=2", "x=3 y=2"
+]
+```
+
+jsonO means json Object like :
+```json
+[
+	{"head1": "x=1 y=1", "head2": "x=2 y=1", "head3": "x=3 y=1"},
+	{"head1": "x=1 y=2", "head2": "x=2 y=2", "head3": "x=3 y=2"}
+]
+```
 
 # Convertion implementation alternative
 
