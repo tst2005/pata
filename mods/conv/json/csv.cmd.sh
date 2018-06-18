@@ -1,12 +1,12 @@
 
 json_array_to_csv() {
-	InLoad mods/jq;
+	Require jq;
 	#. ./mods/jq/array_to_csv.lib.sh
 	jq_array_to_csv;
 }
 
 json_object_to_csv() {
-	InLoad mods/jq;
+	Require jq;
 	if [ $# -eq 0 ]; then
 		jqf 'object_to_array' | jq_array_to_csv
 	else

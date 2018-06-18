@@ -22,6 +22,16 @@ pata_builtin() {
 				(':'*)	new="$NAMESPACE/${1#:}"	;;
 				(*)	new="$1";shift		;;
 				esac
+				case "$new" in
+				(mods)
+					echo >&2 "WARNING: $self[In]: do not use mods/ prefix for $new"
+					new="${new#mods}"
+				;;
+				(mods/*)
+					echo >&2 "WARNING: $self[In]: do not use mods/ prefix for $new"
+					new="${new#mods/}"
+				;;
+				esac
 				if [ -n "$PATA_MODSDIR/$new" ] && [ ! -e "$PATA_MODSDIR/$new" ]; then
 					echo >&2 "$self: No such namespace $new"
 					return 1
@@ -31,35 +41,53 @@ pata_builtin() {
 			;;
 			(Load)
 				shift
+				case "$1" in
+					(mods/*)
+						echo >&2 "WARNING: $self[Load]: do not use mods/ prefix for $1"
+						set -- "${1#mods/}"
+					;;
+				esac
+				$self Require ":$1"
 #echo >&2 "# I am $NAMESPACE/$DIR/$NAME : I am loading $NAMESPACE/$1"
-				local DIR="$(dirname "$1")" NAME="$(basename "$1")" NAMESPACE="$NAMESPACE"
-				. "$PATA_MODSDIR/${NAMESPACE:+$NAMESPACE/}/$1.cmd.sh"
+				#local DIR="$(dirname "$1")" NAME="$(basename "$1")" NAMESPACE="$NAMESPACE"
+				#. "$PATA_MODSDIR/${NAMESPACE:+$NAMESPACE/}$1.cmd.sh"
 			;;
 			(Require) shift
+				local ns="$NAMESPACE"
+				local target="$1";shift
+				case "$target" in
+					(:*) target="${target#:}";;
+					(*)  ns='';;
+				esac
 				local f=''
 				for dir in "$PATA_MODSDIR2" "$PATA_MODSDIR"; do
 					[ -n "$basedir" ] || continue
-					if [ -r "$dir/${NAMESPACE:+$NAMESPACE/}/$1.cmd.sh" ]; then
-						f="$dir/${NAMESPACE:+$NAMESPACE/}/$1.cmd.sh"
+					if [ -r "$dir/${ns:+$ns/}$target.cmd.sh" ]; then
+						f="$dir/${ns:+$ns/}$target.cmd.sh"
 						break
 					fi
 				done
 				if [ -z "$f" ]; then
-					echo >&2 "$self[Require]: no such $1"
+					echo >&2 "$self[Require]: no such $target (in namespace $NAMESPACE)"
 					return 1
 				fi
-				local DIR="$(dirname "$1")" NAME="$(basename "$1")" NAMESPACE="$NAMESPACE"
+				local DIR="$(dirname "$target")" NAME="$(basename "$target")" NAMESPACE="$NAMESPACE"
+				PATA_MOD_PREFIX=''
 				. "$f"
 			;;
 			(InLoad)
 				shift
-				local OLDNAMESPACE="$NAMESPACE"
-				local r=0
-				$self In "$(dirname -- "$1")" &&
-				$self Load "$(basename -- "$1")";
-				r=$?
-				$self In -
-				return $r
+				echo >&2 "WARNING: Inload is obsolete. Please use Require instead of InLoad"
+				#return 1
+				$self Require "$@"
+				return $?
+#				local OLDNAMESPACE="$NAMESPACE"
+#				local r=0
+#				$self In "$(dirname -- "$1")" &&
+#				$self Load "$(basename -- "$1")";
+#				r=$?
+#				$self In -
+#				return $r
 			;;
 			# Create a function named NAME that will call the real function PREFIX_NAME
 			(PrefixFunc)
@@ -260,7 +288,7 @@ pata_bin() {
 	fi
 	local A0="$app"
 	(
-		pata builtin InLoad core/default
+		pata builtin Require core/default
 		pata builtin In .
 		pata builtin source "$app" "$@"
 	)

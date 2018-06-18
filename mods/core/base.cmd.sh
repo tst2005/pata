@@ -2,7 +2,7 @@
 PATA_MOD_PREFIX='PATA_'
 
 PATA_DEBUG() {
-	pata builtin InLoad "base/debug";
+	pata builtin Require "base/debug";
 }
 
 PATA_INPUT() {
