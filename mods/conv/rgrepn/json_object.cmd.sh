@@ -21,7 +21,7 @@ jq_function_split1='def split1($sep): [.|split($sep)|(.[0],(.[1:]|join($sep)))];
 jq_function_splitn='def splitn($sep;$n): [.|split($sep)|(.[0:$n],(.[$n:]|join($sep)))];'
 # split1("sep") equal to splitn("sep";1)
 
-rgrepn_to_json() {
+rgrepn_to_json_object() {
 	jq -R . | jq -s . |
 	jq '
 	'"$jq_function_removeprefix"'
