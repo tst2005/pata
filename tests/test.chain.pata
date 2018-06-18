@@ -1,4 +1,4 @@
-#! ./bin/pata.sh
+#! /usr/bin/env pata
 
 
 # feature: function name prefixed by '#' are not executed
