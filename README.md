@@ -24,19 +24,19 @@ Some experimental stuff use:
 
 # Convertion list
 
-* csv/json_array
+* csv/json_array ( csv/json_object + json_object/json_array )
 * csv/json_object
 * json_array/csv
-* json_object/csv
+* json_object/csv ( json_object/json_array + json_array/csv )
 * json_object/json_array
-* json_object/rgrep
+* json_object/rgrep ( json/rgrepn + rgrepn/rgrep )
 * json_object/rgrepn
 * xml/json
 * html/json
 * html/xml
 * rgrepn/json_object
 * rgrepn/rgrep
-* rgrep/json_object
+* rgrep/json_object ( rgrep/rgrepn + rgrepn/json_object )
 * rgrep/rgrepn
 
 # Convertion matrix
