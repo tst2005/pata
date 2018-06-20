@@ -19,6 +19,7 @@ But also with some thirdparty utils:
 Some experimental stuff use:
 
 * sqlite3 (for SQL)
+* xls, xlsx ods support (to read from spreadsheet files)
 * curl,wget (for download and REST API)
 * ping (for network stuff)
 
@@ -38,6 +39,12 @@ Some experimental stuff use:
 * rgrepn/rgrep
 * rgrep/json_object ( rgrep/rgrepn + rgrepn/json_object )
 * rgrep/rgrepn
+
+TODO:
+
+* xls/json
+* xlsx/json
+* ods/json
 
 # Convertion matrix
 
