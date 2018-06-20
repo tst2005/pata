@@ -1,7 +1,4 @@
-# csv -> json_object -> json_array
-pata builtin Load "$DIR/json_object"
-pata builtin Load "$DIR/../json_object/$NAME"
+# csv -> json_array
 csv_to_json_array() {
-        csv_to_json_object | json_object_to_json_array;
+        ./thirdparty/csv2json/csv2json_array.py "$@";
 }
-

@@ -25,7 +25,7 @@ Some experimental stuff use:
 
 # Convertion list
 
-* csv/json_array ( csv/json_object + json_object/json_array )
+* csv/json_array
 * csv/json_object
 * json_array/csv
 * json_object/csv ( json_object/json_array + json_array/csv )
@@ -51,7 +51,7 @@ TODO:
 | col to raw   | csv  | json_a  | json_o | xml  | html | rgrepn | rgrep |
 |--------------|------|---------|--------|------|------|--------|-------|
 | csv          | -    | yes     | yes    | no   | no   | no     | no    |
-| json_array   | yes* | -       | yes    | -    | -    | no     | no    |
+| json_array   | yes  | -       | yes    | -    | -    | no     | no    |
 | json_object  | yes  | TODO    | -      | -    | -    | yes    | yes   |
 | json(struct) | -    | -       | -      | yes  | yes  | -      | -     |
 | xml          | no   | no      | no     | -    | yes  | no     | no    |
