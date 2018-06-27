@@ -1,4 +1,4 @@
 # csv -> json_array
 csv_to_json_array() {
-        ./thirdparty/csv2json/csv2json_array.py "$@";
+	"${PATA_DIR:-.}/thirdparty/csv2json/csv2json_array.py" "$@";
 }

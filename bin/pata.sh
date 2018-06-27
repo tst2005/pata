@@ -18,6 +18,7 @@ pata_search() {
 }
 basedir="$(readlink 2>&- -f "$0")"
 basedir="$(dirname -- "${basedir:-$0}")"
+PATA_DIR="$basedir/.."
 
 if pata_search "$basedir" -r lib/pata.lib.sh; then
 	PATA_LIBFILE="$found"
