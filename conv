@@ -1,9 +1,4 @@
 #! /usr/bin/env pata
-if [ $# -lt 2 ]; then
-	echo >&2 "Usage: conv <from> <to>"
-	exit 1
-fi
-Require "conv/$1/$2"
-name="$1_to_$2"
-shift 2
-Cmd "$name" "$@"
+
+Require "conv"
+conv "$@"
