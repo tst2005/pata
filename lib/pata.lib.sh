@@ -32,8 +32,11 @@ pata_builtin() {
 					new="${new#mods/}"
 				;;
 				esac
-				if [ -n "$PATA_MODSDIR/$new" ] && [ ! -e "$PATA_MODSDIR/$new" ]; then
-					echo >&2 "$self: No such namespace $new"
+				local ok=false
+				if [ -n "$PATA_MODSDIR" ] && [ -e "$PATA_MODSDIR" ]; then ok=true; fi
+				if [ -n "$PATA_LOCAL_MODSDIR" ] && [ -e "$PATA_LOCAL_MODSDIR/$new" ]; then ok=true; fi
+				if ! ${ok:-false}; then
+					echo >&2 "$self[In]: No such namespace $new"
 					return 1
 				fi
 				OLDNAMESPACE="$NAMESPACE"
@@ -60,7 +63,7 @@ pata_builtin() {
 					(*)  ns='';;
 				esac
 				local f=''
-				for dir in "$PATA_MODSDIR2" "$PATA_MODSDIR"; do
+				for dir in "$PATA_LOCAL_MODSDIR" "$PATA_MODSDIR"; do
 					[ -n "$basedir" ] || continue
 					if [ -r "$dir/${ns:+$ns/}$target.cmd.sh" ]; then
 						f="$dir/${ns:+$ns/}$target.cmd.sh"

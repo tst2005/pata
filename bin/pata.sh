@@ -16,6 +16,14 @@ pata_search() {
 	done
 	return 1
 }
+pata_local_search() {
+	for found in "$1/$3" "$1/../$3"; do
+		if [ $2 "$found" ]; then
+			return 0
+		fi
+	done
+	return 1
+}
 basedir="$(readlink 2>&- -f "$0")"
 basedir="$(dirname -- "${basedir:-$0}")"
 PATA_DIR="$basedir/.."
@@ -32,10 +40,11 @@ else
 	echo >&2 "$0: unable to find mods directory"
 	exit 1
 fi
-if pata_search "$(pwd)" -d mods; then
-	PATA_MODSDIR2="$found"
+if pata_local_search "$(pwd)" -d mods; then
+	PATA_LOCAL_MODSDIR="$found"
+	echo >&2 "PATA_LOCAL_MODSDIR=$PATA_LOCAL_MODSDIR"
 else
-	PATA_MODSDIR2=''
+	PATA_LOCAL_MODSDIR=''
 fi
 
 case "$PATA_LIBFILE" in
