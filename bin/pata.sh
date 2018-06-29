@@ -42,7 +42,6 @@ else
 fi
 if pata_local_search "$(pwd)" -d mods; then
 	PATA_LOCAL_MODSDIR="$found"
-	echo >&2 "PATA_LOCAL_MODSDIR=$PATA_LOCAL_MODSDIR"
 else
 	PATA_LOCAL_MODSDIR=''
 fi
