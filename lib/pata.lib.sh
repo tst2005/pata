@@ -231,7 +231,10 @@ pata_builtin() {
 			return $?
 		;;
 		(CmdExists)
-			command >/dev/null 2>&1 -v "$1"
+			while [ $# -eq 0 ]; do
+				command >/dev/null 2>&1 -v "$1" || return $?
+				shift
+			done
 			return $?
 		;;
 		(DefaultOrChain) echo >&2 "FIXME: rename DefaultOrChain to ChainOrDefault"; return 12;;
