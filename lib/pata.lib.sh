@@ -227,6 +227,16 @@ pata_builtin() {
 			esac
 			return $?
 		;;
+		(Deps)
+			while [ $# -gt 0 ]; do
+				if ! command >/dev/null 2>&1 -v "$1"; then
+					echo >&2 "${self}: missing dependency (command $1)"
+					return 1
+				fi
+				shift
+			done
+			return 0
+		;;
 		(CmdExists)
 			while [ $# -eq 0 ]; do
 				command >/dev/null 2>&1 -v "$1" || return $?
