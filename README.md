@@ -45,6 +45,10 @@ TODO:
 * xls/json
 * xlsx/json
 * ods/json
+* mbox <-> json
+* maildir/maildir+ <-> json
+* http header <-> json
+* curl (header and body) <-> json
 
 # Convertion matrix
 
