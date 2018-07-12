@@ -218,7 +218,7 @@ pata_builtin() {
 	local self="pata builtin"
 	local cmd="$1";shift
 	case "$cmd" in
-		(source|Source)
+		(Source)
 			local f="$1";shift
 			set -- "$@" ; # FIXME: USELESS ?!
 			case "$f" in
@@ -325,6 +325,6 @@ pata_bin() {
 	(
 		pata builtin Require core/default
 		pata builtin In .
-		pata builtin source "$app" "$@"
+		pata builtin Source "$app" "$@"
 	)
 }

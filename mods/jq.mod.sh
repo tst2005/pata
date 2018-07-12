@@ -4,7 +4,7 @@
 for f in "$PATA_MODSDIR/$NAMESPACE/$DIR/$NAME"/*.lib.sh; do
 	[ -e "$f" ] || continue
 	#echo >&2 "- load $f"
-	pata builtin source "$f"
+	pata builtin Source "$f"
 #	case "$f" in
 #		(/*) ;;
 #		(*) f="./$f" ;;
