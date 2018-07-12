@@ -14,6 +14,8 @@ Require() {		pata builtin Require			"$@"; }
 load() { 		pata builtin Load			"$@"; }
 IN() { 			pata builtin In				"$@"; }
 
+Default() {		pata builtin Cmd "default"		"$@"; }
+
 #######################################################################
 
 Load "$(dirname "$DIR/$NAME")"

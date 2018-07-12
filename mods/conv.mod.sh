@@ -1,6 +1,9 @@
 #! /usr/bin/env pata
 
-conv() {
+PATA_MOD_PREFIX='conv_'
+PATA_MOD_DEFAULT='conv' # that will make a conv_default() { conv_conv "$@"; }
+
+conv_conv() {
 	if [ $# -lt 2 ]; then
 		echo >&2 "Usage: conv <from> <to> [args...]"
 		return 1
@@ -15,17 +18,18 @@ conv() {
 	local name="$1_to_$2";shift 2
 	Cmd "$name" "$@"
 }
-encode() {
+
+conv_encode() {
 	if [ $# -lt 1 ]; then
 		echo >&2 "Usage: encode <to>"
 		return 1
 	fi
-	conv raw "$1"
+	conv_conv raw "$1"
 }
-decode() {
+conv_decode() {
 	if [ $# -lt 1 ]; then
 		echo >&2 "Usage: decode <from>"
 		return 1
 	fi
-	conv "$1" raw
+	conv_conv "$1" raw
 }

@@ -61,7 +61,11 @@ pata_builtin_Require() {
 	fi
 	local DIR="$(dirname "$target")" NAME="$(basename "$target")" NAMESPACE="$NAMESPACE"
 	PATA_MOD_PREFIX=''
+	PATA_MOD_DEFAULT=''
 	. "$f"
+	if [ -n "$PATA_MOD_PREFIX" ] && [ -n "$PATA_MOD_DEFAULT" ] && [ "${PATA_MOD_DEFAULT}" != "default" ]; then
+		$self AliasFunc "${PATA_MOD_PREFIX}default" "${PATA_MOD_PREFIX}${PATA_MOD_DEFAULT}"
+	fi
 }
 pata_builtin_InLoad() {
 	local self="${self:-pata builtin}"
@@ -89,6 +93,12 @@ pata_builtin_PrefixFunc() {
 		eval ''"$name"'() { '"$prefix""$name"' "$@"; }'
 	done
 }
+# Create a function named FOO that will call the real function BAR
+pata_builtin_AliasFunc() {
+	local self="${self:-pata builtin}"
+	eval ''"$1"'() { '"$2"' "$@"; }'
+}
+
 # Execute a command with all name translation stuff
 pata_builtin_Cmd() {
 	local self="${self:-pata builtin}"
@@ -308,12 +318,27 @@ pata() {
 }
 
 pata_bin() {
+	local errorusage=false
+	while [ $# -gt 0 ]; do
+		case "$1" in
+			(-h|--help) echo >&2 'Usage: '"${PATA_ARG0:-pata}"' [<options>] <file>'; return 0 ;;
+			(--) shift; break;;
+			(-*) echo >&2 "Unknown option $1";errorusage=true;break;;
+			(*) break ;;
+		esac
+		shift
+	done
+
 	if [ $# -eq 0 ]; then
 		if [ -t 0 ]; then
-			echo >&2 "Usage: ${PATA_ARG0:-pata} file"
-			return 1
+			errorusage=true
+		else
+			set -- /dev/stdin
 		fi
-		set -- /dev/stdin
+	fi
+	if ${errorusage:-false}; then
+		echo >&2 'Usage: '"${PATA_ARG0:-pata}"' [<options>] <file>'
+		return 1
 	fi
 
 	local app="$1";shift

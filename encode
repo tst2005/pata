@@ -1,4 +1,4 @@
 #! /usr/bin/env pata
 
 Require "conv"
-encode "$@"
+Cmd encode "$1"
