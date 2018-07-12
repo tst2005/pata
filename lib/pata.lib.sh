@@ -36,9 +36,6 @@ pata_builtin_Load() {
 		;;
 	esac
 	$self Require ":$1"
-#echo >&2 "# I am $NAMESPACE/$DIR/$NAME : I am loading $NAMESPACE/$1"
-	#local DIR="$(dirname "$1")" NAME="$(basename "$1")" NAMESPACE="$NAMESPACE"
-	#. "$PATA_MODSDIR/${NAMESPACE:+$NAMESPACE/}$1.cmd.sh"
 }
 
 pata_builtin_Require() {
@@ -53,8 +50,8 @@ pata_builtin_Require() {
 	local f=''
 	for dir in "$PATA_LOCAL_MODSDIR" "$PATA_MODSDIR"; do
 		[ -n "$basedir" ] || continue
-		if [ -r "$dir/${ns:+$ns/}$target.cmd.sh" ]; then
-			f="$dir/${ns:+$ns/}$target.cmd.sh"
+		if [ -r "$dir/${ns:+$ns/}$target.mod.sh" ]; then
+			f="$dir/${ns:+$ns/}$target.mod.sh"
 			break
 		fi
 	done
