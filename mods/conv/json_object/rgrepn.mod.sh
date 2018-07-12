@@ -1,4 +1,4 @@
-json_to_rgrepn() {
+json_object_to_rgrepn() {
 	jq '
 	map(
 		(if (.dir|startswith("/")) then ("") else ("./") end) +
