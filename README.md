@@ -39,6 +39,7 @@ Some experimental stuff use:
 * rgrepn/rgrep
 * rgrep/json_object ( rgrep/rgrepn + rgrepn/json_object )
 * rgrep/rgrepn
+* yaml/json
 
 TODO:
 
@@ -49,19 +50,22 @@ TODO:
 * maildir/maildir+ <-> json
 * http header <-> json
 * curl (header and body) <-> json
+* json/yaml
 
 # Convertion matrix
 
-| col to row   | csv  | json_a  | json_o | xml  | html | rgrepn | rgrep |
-|--------------|------|---------|--------|------|------|--------|-------|
-| csv          | -    | yes     | yes    | no   | no   | no     | no    |
-| json_array   | yes  | -       | yes    | -    | -    | no     | no    |
-| json_object  | yes  | TODO    | -      | -    | -    | yes    | yes   |
-| json(struct) | -    | -       | -      | yes  | yes  | -      | -     |
-| xml          | no   | no      | no     | -    | yes  | no     | no    |
-| html         | no   | no      | no     | no   |TODO**| no     | no    |
-| rgrepn       | no   | no      | yes    | no   | no   | -      | yes   |
-| rgrep        | no   | no      | yes    | no   | no   | yes    | -     |
+| col to row   | csv  | json_a  | json_o | xml  | yaml | html | rgrepn | rgrep |
+|--------------|------|---------|--------|------|------|------|--------|-------|
+| csv          | -    | yes     | yes    | no   | no   | no   | no     | no    |
+| json_array   | yes  | -       | yes    | -    |      | -    | no     | no    |
+| json_object  | yes  | TODO    | -      | -    |      | -    | yes    | yes   |
+| json(struct) | -    | -       | -      | yes  | yes  | yes  | -      | -     |
+| xml          | no   | no      | no     | -    |      | yes  | no     | no    |
+| html         | no   | no      | no     | no   |      |TODO**| no     | no    |
+| rgrepn       | no   | no      | yes    | no   |      | no   | -      | yes   |
+| rgrep        | no   | no      | yes    | no   |      | no   | yes    | -     |
+| yaml         |      | TODO    | TODO   |      |      |      |        |       |
+
 
 (*: via convertion)
 (**: via tidy )
