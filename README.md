@@ -52,7 +52,7 @@ TODO:
 
 # Convertion matrix
 
-| col to raw   | csv  | json_a  | json_o | xml  | html | rgrepn | rgrep |
+| col to row   | csv  | json_a  | json_o | xml  | html | rgrepn | rgrep |
 |--------------|------|---------|--------|------|------|--------|-------|
 | csv          | -    | yes     | yes    | no   | no   | no     | no    |
 | json_array   | yes  | -       | yes    | -    | -    | no     | no    |
