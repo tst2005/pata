@@ -9,11 +9,11 @@ jq_function_skipfirst='def skipfirst: del(.[0]);'
 jq_function_split_skipfirst='def split_skipfirst($sep): (split($sep)|skipfirst|join($sep));'
 
 rgrep_to_json_object() {
-	jq -R . | jq -s . |
-	jq '
+	jq -Rn '
 	'"$jq_function_removeprefix"'
 	'"$jq_function_skipfirst"'
 	'"$jq_function_split_skipfirst"'
+	[inputs] |
 	map(
 		removeprefix |
 		{
