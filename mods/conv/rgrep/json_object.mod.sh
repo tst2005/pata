@@ -1,6 +1,25 @@
-# rgrep -> rgrepn -> json_object
-pata builtin Load "$DIR/rgrepn"
-pata builtin Load "$DIR/../rgrepn/$NAME"
+#!/bin/sh
+
+# RGREP
+# id '/' key ':' value
+# ([^/]+) '/' ([^:]+) ':' (.*)
+
+jq_function_removeprefix='def removeprefix: if (.|startswith("./")) then (.|.[2:]) else (.) end;'
+jq_function_skipfirst='def skipfirst: del(.[0]);'
+jq_function_split_skipfirst='def split_skipfirst($sep): (split($sep)|skipfirst|join($sep));'
+
 rgrep_to_json_object() {
-	rgrep_to_rgrepn | rgrepn_to_json_object;
+	jq -R . | jq -s . |
+	jq '
+	'"$jq_function_removeprefix"'
+	'"$jq_function_skipfirst"'
+	'"$jq_function_split_skipfirst"'
+	map(
+		removeprefix |
+		{
+			"dir":   (split("/")|first),
+			"file":  (split_skipfirst("/")|split(":")|first),
+			"value": (split_skipfirst("/")|split_skipfirst(":")),
+		}
+	)'
 }

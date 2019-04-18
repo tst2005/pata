@@ -1,3 +1,4 @@
+#!/bin/sh
 
 # - remove the './' prefix
 # - split('/') limit 1 : dir / rest (subpath/file:value)
@@ -5,35 +6,34 @@
 # - pathtofile = dir + subpath/file
 # - pathdir = pathtofile:split( last / )
 
+#jq_function_split1='def split1($sep): [.|split($sep)|(first,(skipfirst|join($sep)))];'
+#jq_function_splitn='def splitn($sep;$n): [.|split($sep)|(.[0:$n],(.[$n:]|join($sep)))];'
 
-#- split / join
+# RGREP
+# id '/' key ':' value
+# ([^/]+) '/' ([^:]+) ':' (.*)
 
-#- substring
-
-#printf '["foobarbuz", 0, 4]' | jq '.[0][.[1]:.[2]]'
-
-#- index(s), rindex(s)
-
-#- startswith(str)
+# RGREPN
+# id '/' key ':' linenum ':' value
+# ([^/]+) '/' ([^:]+) ':' ([^:]+) ':' (.*)
 
 jq_function_removeprefix='def removeprefix: if (.|startswith("./")) then (.|.[2:]) else (.) end;'
-jq_function_split1='def split1($sep): [.|split($sep)|(.[0],(.[1:]|join($sep)))];'
-jq_function_splitn='def splitn($sep;$n): [.|split($sep)|(.[0:$n],(.[$n:]|join($sep)))];'
-# split1("sep") equal to splitn("sep";1)
+jq_function_skipfirst='def skipfirst: del(.[0]);'
+jq_function_split_skipfirst='def split_skipfirst($sep): (split($sep)|skipfirst|join($sep));'
 
 rgrepn_to_json_object() {
 	jq -R . | jq -s . |
 	jq '
 	'"$jq_function_removeprefix"'
-	'"$jq_function_split1"'
-	'"$jq_function_splitn"'
+	'"$jq_function_skipfirst"'
+	'"$jq_function_split_skipfirst"'
 	map(
 		removeprefix |
-		split1("/") |
-		[ .[0], (.[1]|split1(":"))] | flatten(1) |
-		[ ([.[0],.[1]]|join("/")), .[2:]] | flatten(1) |
-		[ .[0][0:(.[0]|rindex("/"))], .[0][(.[0]|rindex("/"))+1:], .[1:]] | flatten(1) |
-		[ .[0], .[1], (.[2]|split1(":"))] | flatten(1) |
-		{"dir": .[0], "file": .[1], "n": .[2]|tonumber, "value": .[3]}
+		{
+			"dir":   (split("/")|first),
+			"file":  (split_skipfirst("/")|split(":")|first),
+			"n":     (split_skipfirst("/")|split_skipfirst(":")),
+			"value": (split_skipfirst("/")|split_skipfirst(":")|split_skipfirst(":")),
+		}
 	)'
 }
