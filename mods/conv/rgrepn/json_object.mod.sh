@@ -1,4 +1,3 @@
-#!/bin/sh
 
 # - remove the './' prefix
 # - split('/') limit 1 : dir / rest (subpath/file:value)
