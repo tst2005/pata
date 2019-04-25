@@ -20,24 +20,26 @@ jq_function_removeprefix='
 	def removeprefix:
 		if (.|startswith("./")) then (.|.[2:]) else (.) end
 	;'
+
 jq_function_skipfirst='
 	def skipfirst:
 		del(.[0])
 	;'
+
 jq_function_split_skipfirst='
 	def split_skipfirst($sep):
 		(split($sep)|skipfirst|join($sep))
 	;'
-
 
 jq_function_trytonumber='
 	def trytonumber:
 		if (try (.|tonumber) catch false) then (.|tonumber) else (.) end
 	;'
 
+#jq_function_maybe='def maybe(f): if (try (f) catch false) then (f) else (.) end;'
 jq_function_maybe='
 	def maybe(f):
-		if (try (f) catch false) then (f) else (.) end
+		(f?//.)
 	;'
 
 jq_function_ifempty='
